@@ -1,0 +1,27 @@
+{
+    "id": "3C44AE51",
+    "path": "~/Documents/RStudio-Projects/SA-LSTM/Scripts/LSTM.R",
+    "project_path": "Scripts/LSTM.R",
+    "type": "r_source",
+    "hash": "0",
+    "contents": "",
+    "dirty": false,
+    "created": 1677707037278.0,
+    "source_on_save": false,
+    "relative_order": 2,
+    "properties": {
+        "source_window_id": "",
+        "Source": "Source",
+        "cursorPosition": "95,0",
+        "scrollLine": "83",
+        "docOutlineVisible": "0"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1677832439,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1677832439073,
+    "read_only": false,
+    "read_only_alternatives": []
+}

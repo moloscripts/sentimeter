@@ -1,0 +1,25 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@300&display=swap');
+
+body {
+    font-family: 'Roboto Condensed', sans-serif;
+}
+
+
+
+
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+
+.main-header .logo {
+font-family: 'Roboto', sans-serif;
+  font-size: 18px;
+}
+
+
+.logo {
+background-color: #fafafa !important;
+
+}
+
+.navbar {
+  background-color: #fafafa !important;
+}

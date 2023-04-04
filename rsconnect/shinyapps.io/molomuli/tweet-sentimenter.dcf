@@ -1,0 +1,14 @@
+name: tweet-sentimenter
+title: tweet-sentimenter
+username:
+account: molomuli
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 8512030
+bundleId: 6930626
+url: https://molomuli.shinyapps.io/tweet-sentimenter/
+when: 1678275963.45314
+lastSyncTime: 1678275963.45316
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: www/style.css|Scripts

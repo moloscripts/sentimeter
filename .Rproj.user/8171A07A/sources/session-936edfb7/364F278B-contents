@@ -1,0 +1,61 @@
+# # Tensorflow environment ####
+# library(tensorflow)
+# use_condaenv(condaenv = "env_name",required = T)
+# library(reticulate)
+# tf$constant("Hello Tensorflow!")
+# 
+# # Load the EDA script. It contains the dataset
+# source("Scripts/EDA.R")
+# 
+# # LSTM model ####
+# set.seed(1234)
+# tweets.split <- Tweets %>%
+#   filter(nchar(text)>=15) %>%
+#   initial_split()
+# 
+# tweets.train <- training(tweets.split)
+# tweets.test <- training(tweets.split)
+# 
+# 
+# maxwords<-5000
+# maxlength<-100
+# 
+# tw_recipe <- recipe(~text, data = tweets.train) %>%
+#   step_tokenize(text) %>%
+#   step_tokenfilter(text, max_tokens = maxwords) %>%
+#   step_sequence_onehot(text, sequence_length = maxlength)
+# 
+# 
+# tw_prep <- prep(tw_recipe)
+# tw_train <- bake(tw_prep, new_data=NULL, composition='matrix')
+# 
+# dim(tw_train)
+# 
+# # Keras sequential model
+# lstm_mod <- keras_model_sequential() %>%
+#   layer_embedding(input_dim = maxwords + 1, output_dim = 32) %>%
+#   layer_lstm(units = 32) %>%
+#   layer_dense(units = 1, activation = "sigmoid")
+# 
+# lstm_mod %>%
+#   compile(
+#     optimizer = "adam",
+#     loss = "binary_crossentropy",
+#     metrics = c("accuracy")
+#   )
+# 
+# lstm_history <- lstm_mod %>%
+#   fit(
+#     tw_train,
+#     tweets.train$score,
+#     epochs = 10,
+#     validation_split = 0.25,
+#     batch_size = 512,
+#     verbose = FALSE
+#   )
+# 
+# plot(lstm_history)
+# 
+# # References ####
+# # This dataset was published in Saif M. Mohammad and Peter Turney. (2013), ``Crowdsourcing a Word-Emotion Association Lexicon.'' Computational Intelligence, 29(3): 436-465.
+# 

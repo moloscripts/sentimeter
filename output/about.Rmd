@@ -1,0 +1,34 @@
+---
+title: "About the dashboard"
+output: 
+ html_document:
+       toc: true
+       number_sections: true
+       theme: cosmo
+       toc_float: false
+---
+
+This dashboard synthesises COVID-19 vaccine tweets generated from Twitter by Kenyans on Twitter *(["#KOT"](https://twitter.com/search?q=%23KOT&src=typeahead_click))* using sentiment analysis.
+Sentiment analysis, also known as opinion mining is a process of analysing digital text with an aim of classifying emotional tone of the message. [[1]](https://aws.amazon.com/what-is/sentiment-analysis/)
+
+# Dashboard components
+The dashboard has two sections:
+
+* Sentiment analysis section
+* LSTM model summary section
+
+## Sentiment analysis
+The sentiment analysis results section has two parts: Filter section and data visualisation section. On the filter section one has to either select negative or positive sentiment using the drop down or/and implement a time range using the date range function. The three charts and one table will dynamically change according to the filter(s) applied. Data visualisation catalogue supporting sentiment analysis include:
+
+* **Sentiment scores over time** - A line chart that shows the sentiment scores across the duration of when the tweets were posted. Each tweet has a time stamp of when it was posted on twitter. 
+Sentiment scores are values assigned to single words depending on the emotional tone the word elucidates.[[2]](https://www.tidytextmining.com/sentiment.html) These values are present in the NRC Word Emotional lexicon [[3]](http://saifmohammad.com/WebPages/NRC-Emotion-Lexicon.htm).
+* **Sentiment scores per location** - A bar graph showing the sentiment scores of location based on geo-tagged tweets only. Data cleaning had to be performed on this column due to irrelevant locations. Caveat: Not all tweets present in this analysis were geo-tagged. 
+* **Sentiment scores per emotions** - The NRC Word Emotional lexicon classifies words into different emotions depending on the tone of the text. The degree each emotion elucidates is represented by a value which can either be positive or negative. The higher the value, the higher the weight of the emotion in the text. Hence this graph plots the emotions present in the words with their corresponding values. From a glimpse, the highest negative emotion among  vis-à-vis their values. 
+* **Tweets table** - This is a table containing the tweets, emotional tone the tweets elucidates and the date when the tweets were posted. The beauty of this section is that one can download the tweets as either PDF or excel depending on the filters applied.
+
+## LSTM model summary
+LSTM stands for Long short-term memory. Its a machine learning model used to predict either a dichotomous response variable or a trichotomous response variable based on textual data as inputs. LSTM is part of a larger family of neural networks called recurrent neural networks (RNN). 
+
+LSTM model implemented in this project is Bidirectional, meaning that this model consist of two LSTMs: one taking the input in a forward direction, and the other in a backwards direction. BiLSTMs effectively increase the amount of information available to the network, improving the context available to the algorithm (e.g. knowing what words immediately follow and precede a word in a sentence). [[4]](https://paperswithcode.com/method/bilstm)
+
+Bidirectional model summary is represented by two plots. Cross-entropy and Accuracy plot. Interpretation of these plots is detailed in that section. 

@@ -1,0 +1,207 @@
+---
+title: "Sentiment Classification of Kenya COVID-19 Vaccine Tweets"
+author: "by andrewmolo"
+output:
+    tufte::tufte_html: default
+---
+
+```{r, message=FALSE, warning=FALSE, include=FALSE}
+source("Scripts/EDA.R")
+source("Scripts/LSTM.R")
+```
+# Abstract
+```{r, echo=FALSE, fig.cap="Fig 1.0.Sentiment scores based on emotions", fig.margin=T, message=FALSE, warning=FALSE, paged.print=FALSE}
+emotion.sentiscore
+```
+
+Results from sentiment analysis on Kenya COVID-19 Vaccine Tweets revealed that 66% (6,151) of the words were positive, 26% (2,380) of the words were negative and 8% (764) of the words were neutral. The most common positive emotions Kenyans on Twitter had in regards to COVID-19 vaccine was trust that has a sentiment score of 6548, followed by anticipation (4448), joy (3168) and finally surprise (1712). The most negative emotions Kenyans on Twitter had in regards to the vaccine was fear (-6134), sadness (-2714) and anger (-2647). The least negative emotion was disgust with a score of -1418.
+
+```{r, echo=FALSE, fig.cap="Fig 2.0. Sentiment scores based on location", fig.margin=T, message=FALSE, warning=FALSE, paged.print=FALSE}
+loc.sentiscore
+```
+
+Locationwise sentiment analysis had a limitation of all tweets not being geotagged. Nonetheless, on the ones that were geo-tagged,  Nairobi had an almost equal measure of both positve and negative sentiment scores of 23534 & -1317, followed by Mombasa (4711 & -3438). Towns which had a higher negative score that the positve one were Kajiado (-99 & 27) Kisumu (-16) and Narok (-4). Further to this analysis, Bidirectional LSTM (BiLSTM) model was applied to the data set since the response variable has already been generated. The model had a 80% accuracy meaning that it can accurately predict 8/10 tweets depending on any context. 
+
+Below is an abridged summary of the research context, data analysis results and machine learning approaced used.  
+
+
+# Introduction 
+Sentiment analysis, also known as opinion mining is a process of analysing digital text with an aim of classifying the tone of a message.[^1] The main aim of sentiment analysis is to identify opinions and attitudes towards a particular topic or entity. Prior to this analysis, 3 main sentiments _(positive & negative)_ are derived from the text by use of machine learning models. 
+
+Also, the digital text in context can be further classified into different emotions the text elucidates.[^2] This is done by use of lexicons which are present across systems and languages used in developing machine learning models. 
+<!-- [[1]](https://aws.amazon.com/what-is/sentiment-analysis/). During the COVID-19 pandemic,  -->
+
+<!-- This dashboard synthesises COVID-19 vaccine tweets generated from Twitter by Kenyans on Twitter *(["#KOT"](https://twitter.com/search?q=%23KOT&src=typeahead_click))* using sentiment analysis. -->
+
+
+# Context of research
+This is part of my project in Msc. Computer Science from The University of Nairobi. The aim of the research is to understand the different perceptions and opinions of Kenyans on Twitter, popularly known as _#KOT_[^3] have about the discourse on roll out, implementation, potential side-effects and general conversation revolving around COVID-19 vaccines as well as the immunisation program implemented by Kenya's Ministry of Health (MoH) together with the relevant health stakeholders.
+
+# Data
+The data set was extracted from twitter using Twitter v2 API at different temporal intervals between 2021 and late 2022. The total number of observations were 1135 and 15 columns.  
+
+
+# Exploratory Data Analysis (EDA)
+EDA on this data set entailed a visual text analytics by use of 2 wordclouds, and a network bigram. The 1st wordcloud visualised common hashtags posted together with COVID-19 vaccine, and the second wordcloud visualised most common unigram across all the tweets. A unigrams is an n-gram of one word.[^4] 
+
+```{r wordcloud, echo=FALSE, fig.cap="Fig 3.0. Word cloud of unigrams", fig.margin=T, message=FALSE, warning=FALSE, paged.print=FALSE}
+unigram.wordcloud
+```
+
+A unigram wordcloud will entail a visualisation of the most common single words appearing on the tweets, independent of the relationship between the previous and proceeding text of words.  A Bigram on the other hand is an n-gram of the most common paired (2) words appearing in a piece of text. A bigram is best visualised using a bi-gram network as shown in _Fig 2.0_. 
+
+
+Results from the two visualisations indicate that the most common unigrams on the tweets are _covidvaccine, covid19, vaccine, kenay, with moderna sputnikV_ being the common ones that appear. 
+
+```{r bigram-net, echo=FALSE, fig.cap="Fig 4.0. Bi-gram network", fig.margin=T, message=FALSE, warning=FALSE, paged.print=FALSE}
+bigram.network
+```
+
+On the other hand, most common bigram networks vaccine which is at the core of the netowk has various vertices such as  pfizer, coronavirus, sputnikV, covidvaccine, among others. Edges also known as lines can be independent and dependent. independent edges and vertices from the bigram network include _delta and variant_, _mrna and technology_, 
+e.t.c.
+
+# Sentiment classification
+Tweet sentiment classification together with their corresponding emotions was done using Saif Mohammad's NRC Word-Emotion Association Lexicon.[^5] The lexicon classifies tweets according to the eight emotions of anger, anticipation, disgust, fear, joy, sadness, surprise and trust. 
+Below is the `R` implementation of this 
+
+```{r NRC-Emotion classification, eval=FALSE}
+# Senti.score is the new DF created containing the tweets, emotions and sentiments. 
+
+# TidyTweets is the DF containing twitter data
+Tweets <- data_frame(id=TidyTweets$id, text = TidyTweets$text, loc=TidyTweets$user_location_1,  datee = TidyTweets$date) %>%
+  unnest_tokens(word, text) %>%
+  anti_join(stop_words) %>%
+  
+  # get sentiments using NRC lexicon
+  inner_join(get_sentiments("nrc")) %>%
+  mutate(score = ifelse(sentiment=='positive',1,ifelse(sentiment=='joy',1,ifelse(sentiment=='anticipation',1,ifelse(sentiment=='trust',1,ifelse(sentiment=='surprise',1,-1)))))) %>%
+  mutate(emotion = sentiment) %>%
+  group_by(id, datee, loc, emotion) %>%
+  summarise(total_score = sum(score)) %>%
+  mutate(sentiment = ifelse(total_score>0,'Positive',ifelse(total_score<0,'Negative','Neutral')))
+```
+
+Further to the classification, NRC lexicon assigns a value which can either be positive or negative based on the degree of the emotion on the text. The higher the value, the  more positive or negative the text is. 
+
+# Bidirectional LSTM Model
+Long Short-Term Memory (LSTM) is a deep learning algorithm. It's a special type of Recurrent Neural Network (RNN) that is able to process sequential data as compared to other deep learning algorithms that process single data points such as images or videos.[^6]
+LSTM model implemented in this project is Bidirectional, meaning that this model consist of more than one LSTM: one taking the input in a forward direction, and the other in a backwards direction. BiLSTMs effectively increase the amount of information available to the network, improving the context available to the algorithm (e.g. knowing what words immediately follow and precede a word in a sentence).[^7]
+
+Below is the `R` code for implementing a 3 layer `BiLSTM` implemented on `Keras` and runs on `TensorFlow`. 
+
+_This code is based on the book Supervised Machine Learning for Text Analysis in R.[^8]_   
+
+```{r eval=FALSE}
+# R implementation of BiLSTM on the twitter data
+
+tweets.split <- Tweets %>%
+  filter(nchar(text)>=15) %>%
+  initial_split()
+
+tweets.train <- training(tweets.split)
+tweets.test <- training(tweets.split)
+
+
+maxwords<-5000
+maxlength<-100
+
+tw_recipe <- recipe(~text, data = tweets.train) %>%
+  step_tokenize(text) %>%
+  step_tokenfilter(text, max_tokens = maxwords) %>%
+  step_sequence_onehot(text, sequence_length = maxlength)
+
+
+tw_prep <- prep(tw_recipe)
+tw_train <- bake(tw_prep, new_data=NULL, composition='matrix')
+
+# Keras Model ####
+# Create an LSTM model with stack 3 Bidirectional LSTM layers
+# Bidirectional layers allows the LSTM network to have both forward and backward information on the sequences on each step
+
+set.seed(2354)
+final_mod <- keras_model_sequential() %>%
+  layer_embedding(input_dim = maxwords + 1, output_dim = 32) %>%
+  bidirectional(layer_lstm(
+    units = 32, dropout = 0.4, recurrent_dropout = 0.4,
+    return_sequences = TRUE
+  )) %>%
+  bidirectional(layer_lstm(
+    units = 32, dropout = 0.4, recurrent_dropout = 0.4,
+    return_sequences = TRUE
+  )) %>%
+  bidirectional(layer_lstm(
+    units = 32, dropout = 0.4, recurrent_dropout = 0.4
+  )) %>%
+  layer_dense(units = 1, activation = "sigmoid")
+
+# Compile the model
+final_mod %>%
+  compile(
+    optimizer = "adam",
+    loss = "binary_crossentropy",
+    metrics = c("accuracy")
+  )
+  
+# Fit the keras model to the training data
+lstm.history <- final_mod %>%
+  fit(
+    tw_train,
+    tweets.train$score,
+    epochs = 10,
+    validation_split = 0.25,
+    batch_size = 512,
+    verbose = FALSE
+  )
+
+
+# Create a function keras_predict
+keras_predict <- function(model, baked_data, response) {
+  predictions <- predict(model, baked_data)[, 1]
+  tibble(
+    .pred_1 = predictions,
+    .pred_class = if_else(.pred_1 < 0.5, 0, 1),
+    state = response
+  ) %>%
+    mutate(across(c(state, .pred_class),            ## create factors
+                  ~ factor(.x, levels = c(1, 0))))  ## with matching levels
+}
+
+
+## Test the model using test data 
+tw_test <- bake(tw_prep, new_data = tweets.test, composition = "matrix")
+final_res <- keras_predict(final_mod, tw_test, tweets.test$score)
+```
+
+# BiLSTM Model summary 
+Bidirectional model summary is represented by Cross-entropy plot also known as negative log likelihood 
+Negative log likelihood (NLL), also known as cross-entropy is a cost function that explains how bad our machine learning model is performing based on the data.
+NLL works by maximising the probability of the model predicting the correct sentiment score by minimising the negative likelihood. I.e. Maximisation by minimisation. 
+If the loss is high, then the errors from the prediction will also be high. This function is visualised in the first plot that has the y-axis as negative values and epochs in the x-axis.
+If the errors from the model are high, the negative values will also be high. 
+However, from this plot, both the loss of the training and validation data are indicating a low decline hence the model will have low errors when predicting sentiment scores.
+
+```{r  fig.cap="Fig 4.0. Cross-entropy plot", fig.margin=T, message=FALSE, warning=FALSE, paged.print=FALSE}
+lstm.plot <- plot(lstm.history)
+lstm.plot
+```
+
+
+# Full Code
+Full code that has a shiny app that runs of local server can be found in this repository: 
+
+* https://github.com/moloscripts/sentimenter
+
+[^1]: https://aws.amazon.com/what-is/sentiment-analysis/
+[^2]: https://www.sciencedirect.com/topics/computer-science/sentiment-analysis
+[^3]: https://twitter.com/search?q=%23KOT
+[^4]: https://www.researchgate.net/figure/An-example-of-unigrams-bigrams-trigrams-and-4-grams-extracted-from-the-clinical-phrase_fig1_271910222
+[^5]: https://saifmohammad.com/WebPages/NRC-Emotion-Lexicon.htm
+[^6]: https://intellipaat.com/blog/what-is-lstm/ 
+[^7]: https://paperswithcode.com/method/bilstm
+[^8]: https://smltar.com/
+
+
+
+
+
+<!-- two plots. Cross-entropy and Accuracy plot. Interpretation of these plots is detailed in that section.  -->

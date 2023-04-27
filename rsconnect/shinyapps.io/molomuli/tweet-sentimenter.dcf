@@ -4,11 +4,11 @@ username:
 account: molomuli
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
-appId: 8512030
-bundleId: 6930626
+appId: 8956819
+bundleId: 7137825
 url: https://molomuli.shinyapps.io/tweet-sentimenter/
-when: 1678275963.45314
-lastSyncTime: 1678275963.45316
+when: 1682503857.40749
+lastSyncTime: 1682503857.4075
 asMultiple: FALSE
 asStatic: FALSE
-ignoredFiles: www/style.css|Scripts
+ignoredFiles: app-backup.R|Data/Tweets2-copy.csv|Data/VAccination-KE.csv

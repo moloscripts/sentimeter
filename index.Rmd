@@ -6,8 +6,8 @@ output:
 ---
 
 ```{r, message=FALSE, warning=FALSE, include=FALSE}
-source("Scripts/EDA.R")
-source("Scripts/LSTM.R")
+source("EDA.R")
+source("LSTM.R")
 ```
 # Abstract
 ```{r, echo=FALSE, fig.cap="Fig 1.0.Sentiment scores based on emotions", fig.margin=T, message=FALSE, warning=FALSE, paged.print=FALSE}

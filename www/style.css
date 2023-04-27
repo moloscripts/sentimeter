@@ -1,25 +1,25 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@300&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@300&family=PT+Sans+Narrow&family=Roboto+Condensed:wght@300&display=swap');
 
-body {
-    font-family: 'Roboto Condensed', sans-serif;
+h2 {
+  font-family: 'PT Sans Narrow', sans-serif;
+  color:#043D52;
 }
 
-
-
-
-@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
-
-.main-header .logo {
-font-family: 'Roboto', sans-serif;
-  font-size: 18px;
+h3 {
+  font-family: 'Oswald', sans-serif;
+  color:#64DE9D;
 }
 
-
-.logo {
-background-color: #fafafa !important;
-
+h4 {
+  font-family: 'Oswald', sans-serif;
+  color:#080000;
 }
 
-.navbar {
-  background-color: #fafafa !important;
+h5 {
+  font-family: 'Roboto Condensed', sans-serif;
+  color:#043D52;
+}
+
+p{
+  font-family: 'Roboto Condensed', sans-serif;
 }

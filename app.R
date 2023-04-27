@@ -1,7 +1,7 @@
 library(shiny)
 library(shinydashboard)
 
-source("Scripts/EDA.R")
+source("Scripts/LSTM.R")
 
 ui <- navbarPage("Kenya COVID-19 Vaccine Tweets", inverse = T,collapsible = T,
                  
@@ -59,20 +59,20 @@ ui <- navbarPage("Kenya COVID-19 Vaccine Tweets", inverse = T,collapsible = T,
                           hr(),
                           
                           # Accuracy plot
-                          h3("Accuracy plot"),
-                          fluidRow(column(4, 
-                                          h4("Description"), 
-                                          "Accuracy plot shows how accurate the model is.", br(), 
-                                          "If the accuracy of the training data is improving and the opposite is for the validation data, the model is memorising the data rather than learning from it.", br(), 
-                                          "Also, if the accuracy of both the training and validation data is on a steady incline in the last epochs (x-axis values) of the plot, 
-                           then the model hasn't yet fully learned the dataset.", br(),
-                                          "From the output, we can see the accuracy of both the training and validation dataset was on a steady incline until it reached epoch 4. 
-                           This means that the model has almost sufficient data to learn from. Addition of more data to this model will yield the an almost similar results"
-                          ),
-                          # Plot for Negative log likelihood
-                          column(8, h4("Plot"),  
-                                 plotOutput("rocurve"))
-                          ), 
+                          # h3("Accuracy plot"),
+                          # fluidRow(column(4, 
+                          #                 h4("Description"), 
+                          #                 "Accuracy plot shows how accurate the model is.", br(), 
+                          #                 "If the accuracy of the training data is improving and the opposite is for the validation data, the model is memorising the data rather than learning from it.", br(), 
+                          #                 "Also, if the accuracy of both the training and validation data is on a steady incline in the last epochs (x-axis values) of the plot, 
+                          #  then the model hasn't yet fully learned the dataset.", br(),
+                          #                 "From the output, we can see the accuracy of both the training and validation dataset was on a steady incline until it reached epoch 4. 
+                          #  This means that the model has almost sufficient data to learn from. Addition of more data to this model will yield the an almost similar results"
+                          # ),
+                          # # Plot for Negative log likelihood
+                          # column(8, h4("Plot"),  
+                          #        plotOutput("rocurve"))
+                          # ), 
                           ),
                  
                  tabPanel("About", 

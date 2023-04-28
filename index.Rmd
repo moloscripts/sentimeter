@@ -6,27 +6,28 @@ output:
 ---
 
 ```{r, message=FALSE, warning=FALSE, include=FALSE}
-source("EDA.R")
-source("LSTM.R")
+source("Scripts/EDA.R")
+source("Scripts/LSTM.R")
 ```
 # Abstract
-```{r, echo=FALSE, fig.cap="Fig 1.0.Sentiment scores based on emotions", fig.margin=T, message=FALSE, warning=FALSE, paged.print=FALSE}
+```{r, echo=FALSE, fig.cap="Fig 1.0. Sentiment scores based on emotions", fig.margin=T, message=FALSE, warning=FALSE, paged.print=FALSE}
 emotion.sentiscore
 ```
 
-Results from sentiment analysis on Kenya COVID-19 Vaccine Tweets revealed that 66% (6,151) of the words were positive, 26% (2,380) of the words were negative and 8% (764) of the words were neutral. The most common positive emotions Kenyans on Twitter had in regards to COVID-19 vaccine was trust that has a sentiment score of 6548, followed by anticipation (4448), joy (3168) and finally surprise (1712). The most negative emotions Kenyans on Twitter had in regards to the vaccine was fear (-6134), sadness (-2714) and anger (-2647). The least negative emotion was disgust with a score of -1418.
+Results from sentiment analysis on Kenya COVID-19 Vaccine Tweets revealed that 66% (6,151) of the words present in the tweets sampled were positive, 26% (2,380) were negative and 8% (764) were neutral. The most common positive emotions Kenyans on Twitter had in regards to COVID-19 vaccine was trust that has a sentiment score of 6548, followed by anticipation (4448), joy (3168) and finally surprise (1712). The most negative emotions Kenyans on Twitter had in regards to the vaccine was fear (-6134), sadness (-2714) and anger (-2647). The least negative emotion was disgust with a score of -1418.
 
 ```{r, echo=FALSE, fig.cap="Fig 2.0. Sentiment scores based on location", fig.margin=T, message=FALSE, warning=FALSE, paged.print=FALSE}
 loc.sentiscore
 ```
 
-Locationwise sentiment analysis had a limitation of all tweets not being geotagged. Nonetheless, on the ones that were geo-tagged,  Nairobi had an almost equal measure of both positve and negative sentiment scores of 23534 & -1317, followed by Mombasa (4711 & -3438). Towns which had a higher negative score that the positve one were Kajiado (-99 & 27) Kisumu (-16) and Narok (-4). Further to this analysis, Bidirectional LSTM (BiLSTM) model was applied to the data set since the response variable has already been generated. The model had a 80% accuracy meaning that it can accurately predict 8/10 tweets depending on any context. 
+Locationwise, there was a limitation in the analysis due to all tweets not geo-tagged. However, on the ones that were geo-tagged, Nairobi had a distant measure of both positive and negative sentiment scores of 23534 & -1317, followed by Mombasa (4711 & -3438). Towns which had a higher negative sentiment score were Kajiado (-99 & 27) Kisumu (-16) and Narok (-4). Further to this analysis, Bidirectional LSTM (BiLSTM) model was applied to the data set since the response variable has already been generated. The model had a 80% accuracy meaning that it can accurately predict 8/10 tweets depending on the context. 
 
-Below is an abridged summary of the research context, data analysis results and machine learning approaced used.  
+Below is an abridged summary of the research topic, data analysis results and machine learning algorithm used.  
 
+_Special acknowledgement goes to Center for Epidemiological Modelling and Analysis[^CEMA] for the idea, support and partial scholarship to fulfill this project._ 
 
 # Introduction 
-Sentiment analysis, also known as opinion mining is a process of analysing digital text with an aim of classifying the tone of a message.[^1] The main aim of sentiment analysis is to identify opinions and attitudes towards a particular topic or entity. Prior to this analysis, 3 main sentiments _(positive & negative)_ are derived from the text by use of machine learning models. 
+Sentiment analysis, also known as opinion mining is a process of analysing digital text with an aim of classifying the tone of a message.[^1] The main aim of sentiment analysis is to identify opinions and attitudes towards a particular topic or entity. Prior to this analysis, 3 main sentiments _(positive, negative & neutral)_ are derived from the text by use of machine learning models. 
 
 Also, the digital text in context can be further classified into different emotions the text elucidates.[^2] This is done by use of lexicons which are present across systems and languages used in developing machine learning models. 
 <!-- [[1]](https://aws.amazon.com/what-is/sentiment-analysis/). During the COVID-19 pandemic,  -->
@@ -38,7 +39,8 @@ Also, the digital text in context can be further classified into different emoti
 This is part of my project in Msc. Computer Science from The University of Nairobi. The aim of the research is to understand the different perceptions and opinions of Kenyans on Twitter, popularly known as _#KOT_[^3] have about the discourse on roll out, implementation, potential side-effects and general conversation revolving around COVID-19 vaccines as well as the immunisation program implemented by Kenya's Ministry of Health (MoH) together with the relevant health stakeholders.
 
 # Data
-The data set was extracted from twitter using Twitter v2 API at different temporal intervals between 2021 and late 2022. The total number of observations were 1135 and 15 columns.  
+The data set was extracted from twitter using Twitter v2 API at different temporal intervals between 2021 and late 2022. The total number of observations were 1135 and 15 columns.
+The csv file can be downloaded from [here](https://github.com/moloscripts/sentimenter/blob/main/Data/Tweets2.csv)
 
 
 # Exploratory Data Analysis (EDA)
@@ -48,7 +50,7 @@ EDA on this data set entailed a visual text analytics by use of 2 wordclouds, an
 unigram.wordcloud
 ```
 
-A unigram wordcloud will entail a visualisation of the most common single words appearing on the tweets, independent of the relationship between the previous and proceeding text of words.  A Bigram on the other hand is an n-gram of the most common paired (2) words appearing in a piece of text. A bigram is best visualised using a bi-gram network as shown in _Fig 2.0_. 
+A unigram wordcloud entails a visualisation of the most common single words appearing on the tweets, independent of the relationship between the previous and proceeding text of words.  A Bigram on the other hand is an n-gram of the most common paired (2) words appearing in a piece of text. A bigram is best visualised using a bi-gram network as shown in _Fig 2.0_. 
 
 
 Results from the two visualisations indicate that the most common unigrams on the tweets are _covidvaccine, covid19, vaccine, kenay, with moderna sputnikV_ being the common ones that appear. 
@@ -57,7 +59,8 @@ Results from the two visualisations indicate that the most common unigrams on th
 bigram.network
 ```
 
-On the other hand, most common bigram networks vaccine which is at the core of the netowk has various vertices such as  pfizer, coronavirus, sputnikV, covidvaccine, among others. Edges also known as lines can be independent and dependent. independent edges and vertices from the bigram network include _delta and variant_, _mrna and technology_, 
+On the other hand, the bigram networks had vaccine at the core with  vertices such as  pfizer, coronavirus, sputnikV, covidvaccine, among others spreading out. 
+Edges also known as lines can be independent and dependent based on the vertices. Some of the independent edges and vertices from the bigram network include _delta and variant_, _mrna and technology_, 
 e.t.c.
 
 # Sentiment classification
@@ -173,17 +176,16 @@ final_res <- keras_predict(final_mod, tw_test, tweets.test$score)
 ```
 
 # BiLSTM Model summary 
+```{r  echo=FALSE, fig.cap="Fig 5.0. Cross-Entropy plot for LSTM model summary", fig.margin=T, message=FALSE, warning=FALSE, paged.print=FALSE}
+lstm.plot <- plot(lstm.history)
+lstm.plot
+```
 Bidirectional model summary is represented by Cross-entropy plot also known as negative log likelihood 
 Negative log likelihood (NLL), also known as cross-entropy is a cost function that explains how bad our machine learning model is performing based on the data.
 NLL works by maximising the probability of the model predicting the correct sentiment score by minimising the negative likelihood. I.e. Maximisation by minimisation. 
 If the loss is high, then the errors from the prediction will also be high. This function is visualised in the first plot that has the y-axis as negative values and epochs in the x-axis.
 If the errors from the model are high, the negative values will also be high. 
 However, from this plot, both the loss of the training and validation data are indicating a low decline hence the model will have low errors when predicting sentiment scores.
-
-```{r  fig.cap="Fig 4.0. Cross-entropy plot", fig.margin=T, message=FALSE, warning=FALSE, paged.print=FALSE}
-lstm.plot <- plot(lstm.history)
-lstm.plot
-```
 
 
 # Full Code
@@ -199,6 +201,7 @@ Full code that has a shiny app that runs of local server can be found in this re
 [^6]: https://intellipaat.com/blog/what-is-lstm/ 
 [^7]: https://paperswithcode.com/method/bilstm
 [^8]: https://smltar.com/
+[^CEMA]: https://cema.africa/
 
 
 
